@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -15,8 +15,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import API from "../utils/API";
- 
- 
+import seeds from "../seed.json";
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -29,7 +30,7 @@ function Copyright() {
     </Typography>
   );
 }
- 
+
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
@@ -61,37 +62,41 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
 }));
- 
- 
+
+
 const cards = [1, 2, 3, 4, 5, 6];
- 
- 
- 
+let newBookList = [];
+
+
 export default function Album() {
   const classes = useStyles();
-  const [bookSearch, setBookSearch]=useState("");
- 
+  const [bookSearch, setBookSearch] = useState("");
+
   const handleInputChange = event => {
     // Destructure the name and value properties off of event.target
     // Update the appropriate state
     const { value } = event.target;
     setBookSearch(value);
   };
- 
+
   const handleSearchSubmit = event => {
     event.preventDefault();
-    let {value} = event.target;
+    let { value } = event.target;
     setBookSearch(value);
- 
-    API.getBookFromSearch(bookSearch)
-    .then(res => {
-      let bookList = res;
-      console.log(bookList);
-    })
- 
+
+    API.getBookBySearch(bookSearch)
+      .then(res => {
+        let bookList = res.data.items;
+
+        console.log(bookList);
+
+        //I want to render cards based on this book list
+      })
   }
- 
- 
+
+  //When the page loads, generate a list of six books - we want 
+
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -102,14 +107,14 @@ export default function Album() {
             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
               Welcome to the Google Books Search!
             </Typography>
-            <FormControl component="form" 
-            onSubmit={handleSearchSubmit}>
+            <FormControl component="form"
+              onSubmit={handleSearchSubmit}>
               <InputLabel htmlFor="my-input">Enter book here</InputLabel>
-              <Input 
-              id="my-input" 
-              value={bookSearch}
-              onChange={handleInputChange}
-              aria-describedby="my-helper-text" />
+              <Input
+                id="my-input"
+                value={bookSearch}
+                onChange={handleInputChange}
+                aria-describedby="my-helper-text" />
               <FormHelperText id="my-helper-text">Enter book title, author, or isbn</FormHelperText>
             </FormControl>
           </Container>
@@ -117,28 +122,25 @@ export default function Album() {
         <Container className={classes.cardGrid} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {seeds.map((seed) => (
+              <Grid item key={seed.index} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
-                    image="https://source.unsplash.com/random"
-                    title="Image title"
+                    image={seed.image}
+                    title={seed.title}
                   />
                   <CardContent className={classes.cardContent}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Heading
+                      {seed.title}
                     </Typography>
                     <Typography>
-                      This is a media card. You can use this section to describe the content.
+                      {seed.author}
                     </Typography>
                   </CardContent>
                   <CardActions>
                     <Button size="small" color="primary">
-                      View
-                    </Button>
-                    <Button size="small" color="primary">
-                      Edit
+                      Save book
                     </Button>
                   </CardActions>
                 </Card>
