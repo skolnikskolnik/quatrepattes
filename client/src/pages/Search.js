@@ -64,13 +64,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const cards = [1, 2, 3, 4, 5, 6];
-let newBookList = [];
-
 
 export default function Album() {
   const classes = useStyles();
   const [bookSearch, setBookSearch] = useState("");
+  let newBookList = [];
 
   const handleInputChange = event => {
     // Destructure the name and value properties off of event.target
@@ -87,14 +85,21 @@ export default function Album() {
     API.getBookBySearch(bookSearch)
       .then(res => {
         let bookList = res.data.items;
+        //Shorten this to six items
+        for(let i=0; i< 6; i++){
+          if(bookList[i]){
+            newBookList.push(bookList[i]);
+          }
+        }
+        console.log(newBookList);
+        //We want to make the current cards disappear
 
-        console.log(bookList);
-
-        //I want to render cards based on this book list
+        //additionally cards should appear with the new items
+        
       })
   }
 
-  //When the page loads, generate a list of six books - we want 
+  
 
 
   return (
@@ -151,12 +156,6 @@ export default function Album() {
       </main>
       {/* Footer */}
       <footer className={classes.footer}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-          Something here to give the footer a purpose!
-        </Typography>
         <Copyright />
       </footer>
       {/* End footer */}
