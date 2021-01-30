@@ -1,8 +1,8 @@
 import React from "react";
 import Search from "./pages/Search";
 import Saved from "./pages/Saved";
-import Nav from "./components/Nav";
 import NoMatch from "./pages/NoMatch";
+import NavBar from "./components/NavBar";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
     <div>
-      <Nav />
+    <NavBar />
       <Switch>
         <Route exact path={["/", "/search"]}>
           <Search />
