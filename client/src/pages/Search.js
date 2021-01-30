@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -14,8 +14,9 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormHelperText from '@material-ui/core/FormHelperText';
-
-
+import API from "../utils/API";
+ 
+ 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -28,7 +29,7 @@ function Copyright() {
     </Typography>
   );
 }
-
+ 
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
@@ -60,25 +61,37 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(6),
   },
 }));
-
-const handleFormSubmit = event => {
-  event.preventDefault();
-  console.log("test");
-}
-
+ 
+ 
 const cards = [1, 2, 3, 4, 5, 6];
-
-
-
+ 
+ 
+ 
 export default function Album() {
   const classes = useStyles();
-
+  const [bookSearch, setBookSearch]=useState("");
+ 
+  const handleInputChange = event => {
+    // Destructure the name and value properties off of event.target
+    // Update the appropriate state
+    const { value } = event.target;
+    setBookSearch(value);
+  };
+ 
   const handleSearchSubmit = event => {
     event.preventDefault();
-    console.log("test");
+    let {value} = event.target;
+    setBookSearch(value);
+ 
+    API.getBookFromSearch(bookSearch)
+    .then(res => {
+      let bookList = res;
+      console.log(bookList);
+    })
+ 
   }
-
-
+ 
+ 
   return (
     <React.Fragment>
       <CssBaseline />
@@ -89,9 +102,14 @@ export default function Album() {
             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
               Welcome to the Google Books Search!
             </Typography>
-            <FormControl component="form" onSubmit={handleSearchSubmit}>
+            <FormControl component="form" 
+            onSubmit={handleSearchSubmit}>
               <InputLabel htmlFor="my-input">Enter book here</InputLabel>
-              <Input id="my-input" aria-describedby="my-helper-text" />
+              <Input 
+              id="my-input" 
+              value={bookSearch}
+              onChange={handleInputChange}
+              aria-describedby="my-helper-text" />
               <FormHelperText id="my-helper-text">Enter book title, author, or isbn</FormHelperText>
             </FormControl>
           </Container>
@@ -143,3 +161,4 @@ export default function Album() {
     </React.Fragment>
   );
 }
+
