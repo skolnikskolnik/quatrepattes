@@ -1,8 +1,7 @@
 const express = require("express");
 const path = require("path");
-// const index = require("./routes/index");
-// const api = require("./routes/api");
 const routes = require("./routes");
+const mongoose = require("mongoose");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -24,8 +23,13 @@ if (process.env.NODE_ENV === "production") {
 // Define API routes here
 const dotenv = require('dotenv').config() 
 
-// const API_KEY = process.env.REACT_APP_API_KEIY;
-// console.log(API_KEY);
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/book",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  });
 
 // Send every other request to the React app
 // Define any API routes before this runs

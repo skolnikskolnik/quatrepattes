@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
@@ -12,11 +10,12 @@ import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
+import Box from '@material-ui/core/Box';
 import Input from '@material-ui/core/Input';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import API from "../utils/API";
 import seeds from "../seed.json";
-import BookDisplay from "../components/BookDisplay"
 
 
 function Copyright() {
@@ -70,10 +69,9 @@ const useStyles = makeStyles((theme) => ({
 export default function Album() {
   const classes = useStyles();
   const [bookSearch, setBookSearch] = useState("");
+  //The seed is originally set to the values in the json, then updated based on feedback from the gbooks API
   const [seedValues, setSeedValues] = useState(seeds);
   let newBookList = [];
-
-  
 
   const handleInputChange = event => {
     // Destructure the name and value properties off of event.target
@@ -93,21 +91,36 @@ export default function Album() {
 
         //Shorten this to six items
         //Need to set the seed value to be items in the object
-        for(let i=0; i< 6; i++){
+        for (let i = 0; i < 6; i++) {
 
-          if(bookList[i]){
+          if (bookList[i]) {
 
             //If image link exists, set it equal to the item, otherwise make it an empty string
             let imageURL = "";
-            if(bookList[i].volumeInfo.imageLinks){
+            if (bookList[i].volumeInfo.imageLinks) {
               imageURL = bookList[i].volumeInfo.imageLinks.thumbnail;
+            }
+
+            let bookTitle = "No title";
+            if (bookList[i].volumeInfo.title) {
+              bookTitle = bookList[i].volumeInfo.title;
+            }
+
+            let bookAuthors = "Author unknown";
+            if (bookList[i].volumeInfo.authors) {
+              bookAuthors = bookList[i].volumeInfo.authors;
+            }
+
+            let bookDesc = "No description available";
+            if (bookList[i].volumeInfo.description) {
+              bookDesc = bookList[i].volumeInfo.description;
             }
 
             let objectEntry = {
               "index": i,
-              "title": bookList[i].volumeInfo.title,
-              "author": bookList[i].volumeInfo.authors,
-              "synopsis": bookList[i].volumeInfo.description,
+              "title": bookTitle,
+              "author": bookAuthors,
+              "synopsis": bookDesc,
               "image": imageURL
             }
 
@@ -116,19 +129,28 @@ export default function Album() {
         }
         setSeedValues(newBookList);
 
-        
-        //We want to make the current cards disappear
-        //make class cardGrid make visibility false
-        // setSeedValues(newBookList);
-        
-        //additionally cards should appear with the new items
-        //I will work on the other item first as I don't know how to make the other one disappear 
-        
       })
   }
 
+  const handleBookSave = id => {
 
-  
+    API.saveBook({
+      author: seedValues[id].author,
+      image: seedValues[id].image,
+      title: seedValues[id].title,
+      index: id,
+      synopsis: seedValues[id].synopsis
+    })
+      .then(() => {
+        setSeedValues(seeds);
+      })
+      .catch(err => console.log(err))
+
+
+  }
+
+
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -151,35 +173,45 @@ export default function Album() {
             </FormControl>
           </Container>
         </div>
-        <Container className={classes.cardGrid} maxWidth="md" id="original-cards">
-          {/* End hero unit */}
-          <Grid container spacing={4}>
-            {seedValues.map((seed) => (
-              <Grid item key={seed.index} xs={12} sm={6} md={4}>
-                <Card className={classes.card}>
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={seed.image}
-                    title={seed.title}
-                  />
-                  <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {seed.title}
-                    </Typography>
-                    <Typography>
-                      {seed.author}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      Save book
-                    </Button>
-                  </CardActions>
-                </Card>
+        <Box component="span" m={1}>
+          {seedValues.map((seed) => (
+            <Box key={seed.index} component="span" m={1}>
+              <hr></hr>
+              <Grid container spacing={3}>
+                <Grid item xs={9}>
+                  <h1>{seed.title}</h1>
+                  <h2>{seed.author}</h2>
+                </Grid>
+                <Grid item xs={3}>
+                  <Button onClick={() => handleBookSave(seed.index)} variant="contained" color="primary">
+                    Save book
+                  </Button>
+                </Grid>
               </Grid>
-            ))}
-          </Grid>
-        </Container>
+
+              <Grid container spacing={3}>
+                <Grid item xs>
+                  <Card className={classes.root}>
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        alt={seed.title}
+                        height="140"
+                        image={seed.image}
+                        title="Book cover"
+                      />
+
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+                <Grid item xs={9}>
+                  <p>{seed.synopsis}</p>
+                </Grid>
+              </Grid>
+              <br></br><br></br><br></br><br></br>
+            </Box>
+          ))}
+        </Box>
       </main>
       {/* Footer */}
       <footer className={classes.footer}>
