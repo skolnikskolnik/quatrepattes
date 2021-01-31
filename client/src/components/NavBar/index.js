@@ -89,14 +89,14 @@ export default function NavBar() {
     setAnchorEl(null);
   };
 
-  const handleClosePortfolio = () => {
+  const navBookSearch = () => {
     setAnchorEl(null);
-    window.location.href = "https://skolnikskolnik.github.io/skolportfolio/#/portfolio";
+    window.location.href = "/";
   };
 
-  const handleCloseHome = () => {
+  const navBookshelf = () => {
     setAnchorEl(null);
-    window.location.href = "https://skolnikskolnik.github.io/skolportfolio/#/";
+    window.location.href = "/saved";
   };
 
 
@@ -128,8 +128,10 @@ export default function NavBar() {
               open={open}
               onClose={handleClose}
             > 
-              <MenuItem onClick={handleCloseHome} >Home</MenuItem>
-              <MenuItem onClick={handleClosePortfolio} >Portfolio</MenuItem>
+              <MenuItem onClick={navBookshelf} >
+
+                My Bookshelf</MenuItem>
+              <MenuItem onClick={navBookSearch} >Google Book Search</MenuItem>
             </Menu>
           </IconButton>
         

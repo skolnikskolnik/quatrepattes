@@ -16,6 +16,7 @@ import Input from '@material-ui/core/Input';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import API from "../utils/API";
 import seeds from "../seed.json";
+import BookDisplay from "../components/BookDisplay"
 
 
 function Copyright() {
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
+    visibility: true
   },
   card: {
     height: '100%',
@@ -68,7 +70,10 @@ const useStyles = makeStyles((theme) => ({
 export default function Album() {
   const classes = useStyles();
   const [bookSearch, setBookSearch] = useState("");
+  const [seedValues, setSeedValues] = useState(seeds);
   let newBookList = [];
+
+  
 
   const handleInputChange = event => {
     // Destructure the name and value properties off of event.target
@@ -85,23 +90,45 @@ export default function Album() {
     API.getBookBySearch(bookSearch)
       .then(res => {
         let bookList = res.data.items;
+
         //Shorten this to six items
+        //Need to set the seed value to be items in the object
         for(let i=0; i< 6; i++){
+
           if(bookList[i]){
-            newBookList.push(bookList[i]);
+
+            //If image link exists, set it equal to the item, otherwise make it an empty string
+            let imageURL = "";
+            if(bookList[i].volumeInfo.imageLinks){
+              imageURL = bookList[i].volumeInfo.imageLinks.thumbnail;
+            }
+
+            let objectEntry = {
+              "index": i,
+              "title": bookList[i].volumeInfo.title,
+              "author": bookList[i].volumeInfo.authors,
+              "synopsis": bookList[i].volumeInfo.description,
+              "image": imageURL
+            }
+
+            newBookList.push(objectEntry);
           }
         }
-        console.log(newBookList);
-        //We want to make the current cards disappear
+        setSeedValues(newBookList);
 
+        
+        //We want to make the current cards disappear
+        //make class cardGrid make visibility false
+        // setSeedValues(newBookList);
+        
         //additionally cards should appear with the new items
+        //I will work on the other item first as I don't know how to make the other one disappear 
         
       })
   }
 
+
   
-
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -124,10 +151,10 @@ export default function Album() {
             </FormControl>
           </Container>
         </div>
-        <Container className={classes.cardGrid} maxWidth="md">
+        <Container className={classes.cardGrid} maxWidth="md" id="original-cards">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {seeds.map((seed) => (
+            {seedValues.map((seed) => (
               <Grid item key={seed.index} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia
