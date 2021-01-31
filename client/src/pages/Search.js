@@ -134,8 +134,20 @@ export default function Album() {
 
   const handleBookSave = id => {
 
+    let authorString = "";
+    //if author is an array make it a string
+    let authorValue = seedValues[id].author;
+    if ((typeof authorValue) == "string"){
+
+    } else {
+      //Need to turn this to a string
+      for(let i=0; i< authorValue.length; i++){
+        authorString += authorValue[i];
+      }
+    }
+
     API.saveBook({
-      author: seedValues[id].author,
+      author: authorString,
       image: seedValues[id].image,
       title: seedValues[id].title,
       index: id,
@@ -145,8 +157,6 @@ export default function Album() {
         setSeedValues(seeds);
       })
       .catch(err => console.log(err))
-
-
   }
 
 
@@ -188,7 +198,6 @@ export default function Album() {
                   </Button>
                 </Grid>
               </Grid>
-
               <Grid container spacing={3}>
                 <Grid item xs>
                   <Card className={classes.root}>
@@ -200,12 +209,11 @@ export default function Album() {
                         image={seed.image}
                         title="Book cover"
                       />
-
                     </CardActionArea>
                   </Card>
                 </Grid>
                 <Grid item xs={9}>
-                  <p>{seed.synopsis}</p>
+                  <h4>{seed.synopsis}</h4>
                 </Grid>
               </Grid>
               <br></br><br></br><br></br><br></br>
