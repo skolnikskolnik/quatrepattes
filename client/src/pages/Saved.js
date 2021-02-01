@@ -71,12 +71,21 @@ export default function Album() {
     loadBooks()
   }, [])
 
+  //Loads up the saved book at the start of the page
   const loadBooks = () => {
     API.getBooks()
       .then(res => {
         setBooks(res.data);
       })
       .catch(err => console.log(err))
+  }
+
+  //When delete button is pressed, the book is deleted from the db
+  const deleteBook = id => {
+    console.log(id);
+    API.deleteBook(id)
+    .then(res => loadBooks())
+    .catch(err => console.log(err))
   }
 
   return (
@@ -99,7 +108,7 @@ export default function Album() {
                   <h2>{book.author}</h2>
                 </Grid>
                 <Grid item xs={3}>
-                  <Button variant="contained" color="secondary">
+                  <Button onClick={() => deleteBook(book._id)} variant="contained" color="secondary">
                     Delete book
                   </Button>
                 </Grid>
