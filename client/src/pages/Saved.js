@@ -57,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  margin: {
+    margin: theme.spacing(1),
+  },
 }));
 
 
@@ -88,6 +91,10 @@ export default function Album() {
     .catch(err => console.log(err))
   }
 
+  const handleReroute = url => {
+    window.location.href = url;
+  }
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -108,8 +115,11 @@ export default function Album() {
                   <h2>{book.author}</h2>
                 </Grid>
                 <Grid item xs={3}>
-                  <Button onClick={() => deleteBook(book._id)} variant="contained" color="secondary">
+                  <Button onClick={() => deleteBook(book._id)} variant="contained" color="secondary" className={classes.margin}>
                     Delete book
+                  </Button>
+                  <Button onClick={() => handleReroute(book.url)} variant="contained" color="primary" className={classes.margin}>
+                    View book
                   </Button>
                 </Grid>
               </Grid>

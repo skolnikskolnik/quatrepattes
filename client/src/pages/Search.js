@@ -62,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  margin: {
+    margin: theme.spacing(1),
+  },
 }));
 
 
@@ -88,6 +91,7 @@ export default function Album() {
     API.getBookBySearch(bookSearch)
       .then(res => {
         let bookList = res.data.items;
+
 
         //Shorten this to six items
         //Need to set the seed value to be items in the object
@@ -121,7 +125,8 @@ export default function Album() {
               "title": bookTitle,
               "author": bookAuthors,
               "synopsis": bookDesc,
-              "image": imageURL
+              "image": imageURL,
+              "url": bookList[i].volumeInfo.infoLink
             }
 
             newBookList.push(objectEntry);
@@ -151,12 +156,17 @@ export default function Album() {
       image: seedValues[id].image,
       title: seedValues[id].title,
       index: id,
-      synopsis: seedValues[id].synopsis
+      synopsis: seedValues[id].synopsis,
+      url: seedValues[id].url
     })
       .then(() => {
         setSeedValues(seeds);
       })
       .catch(err => console.log(err))
+  }
+
+  const handleReroute = url => {
+    window.location.href = url;
   }
 
 
@@ -193,8 +203,11 @@ export default function Album() {
                   <h2>{seed.author}</h2>
                 </Grid>
                 <Grid item xs={3}>
-                  <Button onClick={() => handleBookSave(seed.index)} variant="contained" color="primary">
+                  <Button onClick={() => handleBookSave(seed.index)} variant="contained" color="primary" className={classes.margin}>
                     Save book
+                  </Button>
+                  <Button onClick={() => handleReroute(seed.url)} variant="contained" color="primary" className={classes.margin}>
+                    View book
                   </Button>
                 </Grid>
               </Grid>

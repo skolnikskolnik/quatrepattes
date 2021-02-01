@@ -7,6 +7,7 @@ const bookSchema = new Schema({
   title: { type: String, required: true },
   index: Number,
   synopsis: String,
+  url: { type: String, required: true }
 });
 
 const Book = mongoose.model("Book", bookSchema);
