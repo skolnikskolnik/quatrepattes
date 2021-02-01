@@ -1,29 +1,37 @@
-# Create React Express App
 
-## About This Boilerplate
+# quatrepattes 
 
-This setup allows for a Node/Express/React app which can be easily deployed to Heroku.
+![icon for license](https://camo.githubusercontent.com/3ccf4c50a1576b0dd30b286717451fa56b783512/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d79656c6c6f772e737667)
 
-The front-end React app will auto-reload as it's updated via webpack dev server, and the backend Express app will auto-reload independently with nodemon.
+# Table of contents
+1. [Description](#Description)
+2. [Installation instructions](#Installation-instructions)
+3. [Usage](#usage)
+4. [Contributions](#Contributions)
+5. [Testing instructions](#Testing-instructions)
+6. [License](#License)
+7. [Questions](#Questions)
 
-## Starting the app locally
+## Description: 
+This is a React App that uses the Google Books API to allow users to look up books of their choosing. Users can then visit a website for more information on that book, or they can enter the book into their library. Users can also view their library. 
 
-Start by installing front and backend dependencies. While in this directory, run the following command:
+## Installation instructions: 
+Users should npm install before running the program.
 
-```
-npm install
-```
+## Usage: 
+This is for a user who has a lot of books that they want to keep track of, weather in digital or real format.
 
-This should install node modules within the server and the client folder.
+## Contributions: 
+This us currently a solo project of skolnikskolnik
 
-After both installations complete, run the following command in your terminal:
+## Testing instructions: 
+Enter a book into the search term, add it to your library, view the website, then go to the Bookshelf page and view and/or delete a book.
 
-```
-npm start
-```
+## License:  
+This project is covered under the MIT License license.
 
-Your app should now be running on <http://localhost:3000>. The Express server should intercept any AJAX requests from the client.
+## Questions
+Visit my <a href='https://www.github.com/skolnikskolnik'>github page.</a> 
 
-## Deployment (Heroku)
-
-To deploy, simply add and commit your changes, and push to Heroku. As is, the NPM scripts should take care of the rest.
+Email me at jtskolnik@gmail.com with any additional questions you may have. I am always happy to talk to users of my product!
+    
