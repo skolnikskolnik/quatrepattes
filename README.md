@@ -15,7 +15,7 @@
 ## Description: 
 This is a React App that uses the Google Books API to allow users to look up books of their choosing. Users can then visit a website for more information on that book, or they can enter the book into their library. Users can also view their library. 
 
-This application is deployed  <a href='https://skolnikskolnik.github.io/skolportfolio'>here.</a>
+This application is deployed  <a href="https://livrelibre123.herokuapp.com/">here.</a>
 
 The user is greeted with the following screen:
 ![welcome screen](./readme-images/search.JPG)
