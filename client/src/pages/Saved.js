@@ -11,6 +11,10 @@ import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import API from "../utils/API";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+
 
 
 function Copyright() {
@@ -60,6 +64,12 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
 
@@ -67,7 +77,12 @@ const useStyles = makeStyles((theme) => ({
 export default function Album() {
   const classes = useStyles();
   const [books, setBooks] = useState([]);
+  const [open, setOpen] = React.useState(false);
 
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
   // Load all books and store them with setBooks
   useEffect(() => {
@@ -89,11 +104,21 @@ export default function Album() {
     API.deleteBook(id)
     .then(res => loadBooks())
     .catch(err => console.log(err))
+
+    setOpen(true);
   }
 
   const handleReroute = url => {
     window.location.href = url;
   }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   return (
     <React.Fragment>
@@ -109,6 +134,13 @@ export default function Album() {
           {books.map((book) => (
             <Box key={book._id} component="span" m={1}>
               <hr></hr>
+              <div className={classes.root}>
+                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="success">
+                    Successfully deleted!
+                  </Alert>
+                </Snackbar>
+              </div>
               <Grid container spacing={3}>
                 <Grid item xs={9}>
                   <h1>{book.title}</h1>

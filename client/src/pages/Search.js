@@ -16,6 +16,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import API from "../utils/API";
 import seeds from "../seed.json";
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 
 function Copyright() {
@@ -65,16 +67,26 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function Album() {
   const classes = useStyles();
   const [bookSearch, setBookSearch] = useState("");
   //The seed is originally set to the values in the json, then updated based on feedback from the gbooks API
   const [seedValues, setSeedValues] = useState(seeds);
+  const [open, setOpen] = React.useState(false);
   let newBookList = [];
+
 
   const handleInputChange = event => {
     // Destructure the name and value properties off of event.target
@@ -138,18 +150,22 @@ export default function Album() {
   }
 
   const handleBookSave = id => {
+    setOpen(true);
 
     let authorString = "";
     //if author is an array make it a string
     let authorValue = seedValues[id].author;
-    if ((typeof authorValue) == "string"){
+    if ((typeof authorValue) == "string") {
 
     } else {
       //Need to turn this to a string
-      for(let i=0; i< authorValue.length; i++){
+      for (let i = 0; i < authorValue.length; i++) {
         authorString += authorValue[i];
       }
+
+
     }
+
 
     API.saveBook({
       author: authorString,
@@ -160,14 +176,26 @@ export default function Album() {
       url: seedValues[id].url
     })
       .then(() => {
+
         setSeedValues(seeds);
       })
       .catch(err => console.log(err))
+
   }
+
 
   const handleReroute = url => {
     window.location.href = url;
   }
+
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
 
 
@@ -209,6 +237,13 @@ export default function Album() {
                   <Button onClick={() => handleReroute(seed.url)} variant="contained" color="primary" className={classes.margin}>
                     View book
                   </Button>
+                  <div className={classes.root}>
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                      <Alert onClose={handleClose} severity="success">
+                        Successfully saved!
+                    </Alert>
+                    </Snackbar>
+                  </div>
                 </Grid>
               </Grid>
               <Grid container spacing={3}>
