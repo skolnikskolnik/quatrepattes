@@ -15,7 +15,6 @@ import Input from '@material-ui/core/Input';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import API from "../utils/API";
-import seeds from "../seed.json";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
@@ -83,9 +82,10 @@ export default function Album() {
   const classes = useStyles();
   const [bookSearch, setBookSearch] = useState("");
   //The seed is originally set to the values in the json, then updated based on feedback from the gbooks API
-  const [seedValues, setSeedValues] = useState(seeds);
+  const [seedValues, setSeedValues] = useState([]);
   const [open, setOpen] = React.useState(false);
   let newBookList = [];
+  const [successMessage, setSuccessMessage] = useState("");
 
 
   const handleInputChange = event => {
@@ -93,6 +93,9 @@ export default function Album() {
     // Update the appropriate state
     const { value } = event.target;
     setBookSearch(value);
+
+    //Clear input field after the search
+
   };
 
   const handleSearchSubmit = event => {
@@ -145,12 +148,11 @@ export default function Album() {
           }
         }
         setSeedValues(newBookList);
-
+        setBookSearch("");
       })
   }
 
   const handleBookSave = id => {
-    setOpen(true);
 
     let authorString = "";
     //if author is an array make it a string
@@ -162,10 +164,7 @@ export default function Album() {
       for (let i = 0; i < authorValue.length; i++) {
         authorString += authorValue[i];
       }
-
-
     }
-
 
     API.saveBook({
       author: authorString,
@@ -176,11 +175,12 @@ export default function Album() {
       url: seedValues[id].url
     })
       .then(() => {
-
+        //Why does this only work for the titles from Google Books searches and not from the seed?
+        setSuccessMessage(seedValues[id].title);
+        setOpen(true);
         setSeedValues(seeds);
       })
       .catch(err => console.log(err))
-
   }
 
 
@@ -193,7 +193,6 @@ export default function Album() {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
 
@@ -240,7 +239,7 @@ export default function Album() {
                   <div className={classes.root}>
                     <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                       <Alert onClose={handleClose} severity="success">
-                        Successfully saved!
+                        Successfully saved {successMessage}!
                     </Alert>
                     </Snackbar>
                   </div>

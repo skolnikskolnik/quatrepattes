@@ -78,6 +78,7 @@ export default function Album() {
   const classes = useStyles();
   const [books, setBooks] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
 
   function Alert(props) {
@@ -100,12 +101,25 @@ export default function Album() {
 
   //When delete button is pressed, the book is deleted from the db
   const deleteBook = id => {
-    console.log(id);
+
+    displaySuccess(id);
+
     API.deleteBook(id)
-    .then(res => loadBooks())
-    .catch(err => console.log(err))
+      .then(res => loadBooks())
+      .catch(err => console.log(err))
 
     setOpen(true);
+  }
+
+  const displaySuccess = (id) => {
+    console.log(id);
+
+    for(let i=0; i< books.length; i++){
+      if(books[i]._id == id){
+        setSuccessMessage(books[i].title);
+      }
+    }
+
   }
 
   const handleReroute = url => {
@@ -127,7 +141,7 @@ export default function Album() {
         {/* Hero unit */}
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
-              <h1>Look at your saved books</h1>
+            <h1>Look at your saved books</h1>
           </Container>
         </div>
         <Box component="span" m={1}>
@@ -137,7 +151,7 @@ export default function Album() {
               <div className={classes.root}>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                   <Alert onClose={handleClose} severity="success">
-                    Successfully deleted!
+                    Successfully deleted {successMessage}!
                   </Alert>
                 </Snackbar>
               </div>
